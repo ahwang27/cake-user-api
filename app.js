@@ -23,7 +23,7 @@ var dataRouter = require('./routes/data');
 
 var app = express();
 app.use(logger('short'));
-app.use(mongomorgan('mongodb://localhost:27017/cake', 'dev'));
+app.use(mongomorgan(process.env.DATABASE_URL, 'dev'));
 app.use(passport.initialize());
 
 // Cors Implementation
