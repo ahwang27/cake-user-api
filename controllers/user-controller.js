@@ -4,7 +4,7 @@ var { User } = require('../models/user');
 
 // GET ALL [/users]
 const index = (req, res) => {
-    jwt.verify(req.token, 'secretKey', (err, authData) => {
+    jwt.verify(req.token, process.env.JWT_KEY, (err, authData) => {
         if (err) {
             res.json({ error: "Token invalid; token may have expired" })
         }
@@ -18,7 +18,7 @@ const index = (req, res) => {
 
 // GET BY ID [/users/:id]
 const getById = (req, res) => {
-    jwt.verify(req.token, 'secretKey', (err, authData) => {
+    jwt.verify(req.token, process.env.JWT_KEY, (err, authData) => {
         if (err) {
             res.json({ error: "Token invalid; token may have expired" })
         }
@@ -56,7 +56,7 @@ const create = (req, res) => {
 
     
 
-    // jwt.verify(req.token, 'secretKey', (err, authData) => {
+    // jwt.verify(req.token, process.env.JWT_KEY, (err, authData) => {
     //     if (err) {
     //         res.json({ error: "Token invalid; token may have expired" })
     //     }
@@ -73,7 +73,7 @@ const create = (req, res) => {
 
 // DELETE
 const destroy = (req, res) => {
-    jwt.verify(req.token, 'secretKey', (err, authData) => {
+    jwt.verify(req.token, process.env.JWT_KEY, (err, authData) => {
         if (err) {
             res.json({ error: "Token invalid; token may have expired" })
         }
@@ -103,7 +103,7 @@ const login = (req, res) => {
         else {
             user.verifyPassword(req.body.password, function (err, isMatch) {
                 if (isMatch) {
-                    jwt.sign({ user }, 'secretKey', { expiresIn: '30m' }, (err, token) => {
+                    jwt.sign({ user }, process.env.JWT_KEY, { expiresIn: '30m' }, (err, token) => {
                         res.json({
                             success: true,
                             token: token
@@ -124,7 +124,7 @@ const login = (req, res) => {
 
 const tokenCheck = (req, res) => {
     console.log("TOKEN", req.token)
-    jwt.verify(req.token, 'secretKey', (err, authData) => {
+    jwt.verify(req.token, process.env.JWT_KEY, (err, authData) => {
         if (err) {
             res.json({ success: false })
         }

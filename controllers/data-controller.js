@@ -3,7 +3,7 @@ var { requestPromise, filterDateData } = require('../helper/helper-functions');
 
 // GET ALL [/data]
 const index = (req, res) => {
-    jwt.verify(req.token, 'secretKey', async (err, authData) => {
+    jwt.verify(req.token, process.env.JWT_KEY, async (err, authData) => {
         if (err) {
             res.json({ error: err.message });
         } else {
