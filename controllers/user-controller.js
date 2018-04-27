@@ -18,57 +18,45 @@ const index = (req, res) => {
 
 // GET BY ID [/users/:id]
 const getById = (req, res) => {
-    jwt.verify(req.token, process.env.JWT_KEY, (err, authData) => {
+    jwt.verify(req.token, process.env.JWT_KEY, async (err, authData) => {
         if (err) {
             res.json({ error: "Token invalid; token may have expired" })
         }
         else {
-            User.findById(req.params.id).exec((err, user) => {
-                if (user === null) {
-                    res.status(404).json({ message: "User Not Found" });
-                } else {
-                    res.json(user);
-                }
-            })
+            try {
+                let user = await User.findById(req.params.id).exec();
+                user === null ? res.status(404).json({ message: "User Not Found" }) : res.json(user);
+            } catch (err) {
+                res.json({ error: err.message })
+            }
         }
     });
 }
 
-const createNewUser = (req, res) => {
-    var newUser = new User(req.body);
-    newUser.save((err, user) => {
-        if (err) throw err;
+// User.findById(req.params.id).exec((err, user) => {
+            //     if (user === null) {
+            //         res.status(404).json({ message: "User Not Found" });
+            //     } else {
+            //         res.json(user);
+            //     }
+            // })
 
-        res.json(user);
-    })
-}
-
-
-
-// POST 
-const create = (req, res) => {
-    var newUser = new User(req.body);
-    newUser.save((err, user) => {
-        if (err) throw err;
-
-        res.json(user);
-    });
-
-    
-
-    // jwt.verify(req.token, process.env.JWT_KEY, (err, authData) => {
-    //     if (err) {
-    //         res.json({ error: "Token invalid; token may have expired" })
-    //     }
-    //     else {
-    //         var newUser = new User(req.body);
-    //         newUser.save((err, user) => {
-    //             if (err) throw err;
-
-    //             res.json(user);
-    //         });
-    //     }
-    // });
+const createNewUser = async (req, res) => {
+    if (req.headers.key === process.env.REG_CODE) {
+        try {
+            let creation = await User.create(req.body);
+            res.json({
+                success: true,
+                user: creation
+            });
+        } catch (err) {
+            res.json({ error: err.message });
+        }
+    } else {
+        res.json({
+            success: false
+        })
+    }
 }
 
 // DELETE
@@ -138,7 +126,6 @@ const tokenCheck = (req, res) => {
 module.exports = {
     index,
     getById,
-    create,
     destroy,
     login,
     tokenCheck,

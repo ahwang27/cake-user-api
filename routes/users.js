@@ -7,7 +7,6 @@ var auth = require('../controllers/auth');
 router.get('/', auth.verifyToken, userController.index);
 router.get('/byid/:id', auth.verifyToken, userController.getById);
 router.get('/tokencheck', auth.verifyToken, userController.tokenCheck);
-router.post('/', userController.create);
 router.post('/login', userController.login);
 router.post('/register', userController.createNewUser);
 
