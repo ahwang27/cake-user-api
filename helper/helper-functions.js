@@ -22,7 +22,14 @@ const filterDateData = (start, end, data) => {
 
 
 // Request Library Promise Wrapper
-const requestPromise = options => new Promise((resolve, reject) => {
+// includes special header
+const requestPromise = url => new Promise((resolve, reject) => {
+    const options = {
+        url,
+        headers: {
+            'key': process.env.API_KEY
+        }
+    }
     request(options, (err, res, body) => {
         if (err != null) {
             return reject(err);
