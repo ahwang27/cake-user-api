@@ -10,7 +10,7 @@ const index = (req, res) => {
         }
         else {
             User.find().exec((err, users) => {
-                res.json({ authData, users });
+                res.json({ users });
             })
         }
     });
